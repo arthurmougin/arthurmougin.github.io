@@ -3,8 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <title>Meetup WebXR Francophone</title>
+    <meta name="viewport" content="width = divice-width, initial-scale = 1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
+
+        *{
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        h1 {
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+        p, button {
+            font-family: -apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Fira Sans,Ubuntu,Oxygen,Oxygen Sans,Cantarell,Droid Sans,Apple Color Emoji,Segoe UI Emoji,Segoe UI Emoji,Segoe UI Symbol,Lucida Grande,Helvetica,Arial,sans-serif;
+        }
+
+        body, body.discord {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 2fr 1fr;
+            grid-template-areas:
+            "discord  linkedin"
+            "youtube  eventbrite";
+            height: 100vh;
+            transition: grid-template-columns 0.5s ease-out,
+                        grid-template-rows 0.5s ease-out;
+        }
+        body.linkedin {
+            grid-template-columns: 1fr 2fr;
+            grid-template-rows: 2fr 1fr;
+        }
+        body.youtube {
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 1fr 2fr;
+        }
+        body.eventbrite {
+            grid-template-columns: 1fr 2fr;
+            grid-template-rows: 1fr 2fr;
+        }
+
+        #discord {
+            grid-area: discord;
+            --main: #5865f2;
+            --backgroung: url('discord.png')
+        }
+        #linkedin {
+            grid-area: linkedin;
+            --main: #0a66c2;
+            --backgroung: url('linkedin.png')
+        }
+        #youtube {
+            grid-area: youtube ;
+            --main: #ff0000;
+            --backgroung: url('youtube.png')
+        }
+        #eventbrite {
+            grid-area: eventbrite;
+            --main:#f05537;
+            --backgroung: url('eventbrite.png')
+        }
+
+        article {
+            position: relative;
+            padding: 2em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-wrap: nowrap;
+            overflow: hidden;
+        }
+        article:after {
+            position: absolute;
+            content: "";
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            filter: opacity(0.2) blur(2px);
+            background-color: var(--main);
+            background-image: var(--backgroung);
+            background-blend-mode: overlay;
+            background-position: center;
+            background-size: cover;
+            pointer-events: none;
+        }
+        article p {
+            max-height: 50%;
+            overflow-y: auto;
+            margin:1em 0;
+        }
+        article h1 {
+            color: var(--main);
+            font-size: 2em;
+            margin-top:0;
+        }
+
+        button {
+            --c:  var(--main); /* the color*/
+            box-shadow: 0 0 0 .2em inset var(--c);
+            --_g: linear-gradient(var(--c) 0 0) no-repeat;
+            background:
+                    var(--_g) calc(var(--_p,0%) - 100%) 0%,
+                    var(--_g) calc(200% - var(--_p,0%)) 0%,
+                    var(--_g) calc(var(--_p,0%) - 100%) 100%,
+                    var(--_g) calc(200% - var(--_p,0%)) 100%;
+            background-size: 50.5% calc(var(--_p,0%)/2 + .5%);
+            outline-offset: .1em;
+            padding: 0.5em;
+            color: black;
+            transition: background-size .4s, color .8s, background-position 0s .4s;
+            border: none;
+        }
+        button:hover {
+            --_p: 100%;
+            transition: background-position .4s, background-size 0s;
+            color: white;
+        }
+        button:active {
+            box-shadow: 0 0 9e9q inset #0009;
+            background-color: var(--c);
+            color: #fff;
+        }
+
+        @media screen and (max-width: 700px){
+            body, body.discord ,body.linkedin, body.youtube, body.eventbrite{
+                color:red;
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr 1fr 1fr;
+                grid-template-areas:
+                "discord"
+                "linkedin"
+                "youtube"
+                "eventbrite";
+                height: auto;
+            }
+            article {
+                padding: 4em 2em;
+            }
+            article p {
+                margin:1.5em 0;
+            }
+        }
+
+    </style>
 </head>
 <body>
-
+<script type="text/javascript">
+    //Data privacy respecting tracker (PIWIK core)
+    (function(window, document, dataLayerName, id) {
+        window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script');
+        function stgCreateCookie(a,b,c){var d="";if(c){var e=new Date;e.setTime(e.getTime()+24*c*60*60*1e3),d="; expires="+e.toUTCString()}document.cookie=a+"="+b+d+"; path=/"}
+        var isStgDebug=(window.location.href.match("stg_debug")||document.cookie.match("stg_debug"))&&!window.location.href.match("stg_disable_debug");stgCreateCookie("stg_debug",isStgDebug?1:"",isStgDebug?14:-1);
+        var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName),isStgDebug&&qP.push("stg_debug");var qPString=qP.length>0?("?"+qP.join("&")):"";
+        tags.async=!0,tags.src="https://arthurmougin.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts);
+        !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]);
+    })(window, document, 'dataLayer', '2dff8a23-019c-4393-9991-0e1fde46c580');
+</script>
+<article id="discord">
+    <h1>Serveur Discord</h1>
+    <p>
+        Coeur de la communauté WebXR Francophone.
+        Rejoignez la conversation, partagez vos projets et échangez avec d'autres passionnés et curieux du web immersif.
+        Vous pourrez aussi suivre l'organisation des meetups et vous y inscrire en avance.
+    </p>
+    <a href="https://discord.gg/d6824AeKkc"><button>Rejoindre le serveur discord</button></a>
+</article>
+<article id="linkedin">
+    <h1>Linkedin</h1>
+    <p>
+        Arthur Mougin, poste régulièrement des annonces sur LinkedIn.
+        Suivez-le pour être tenu au courant des évolutions du serveur et partagez à vos contacts !
+    </p>
+    <a href="https://www.linkedin.com/in/arthur-mougin/"><button>Suivez Arthur Mougin sur Linkedin</button></a>
+</article>
+<article id="youtube">
+    <h1>Youtube</h1>
+    <p>Raté un meetup ? Pas d'inquiétude ! Tous vos replays de meetups passés sont rediffusés sur Youtube. Abonnez-vous pour ne rien manquer !</p>
+    <a href="https://www.youtube.com/@WebXRFrancophone"><button>Abonnez vous à la chaine Youtube WebXR Francophone</button></a>
+</article>
+<article id="eventbrite">
+    <h1>EventBrite</h1>
+    <p>Une alternative simple de s'inscrire aux meetups est de passer par EventBrite ! Attention cependant, rejoindre la salle Hubs nécessite une inscription au discord.</p>
+    <a href="https://www.eventbrite.fr/e/billets-meetup-webxr-francophone-543224548247"><button>Inscrivez-vous aux meetups sur EventBrite</button></a>
+</article>
+<script>
+    const discord = document.getElementById("discord")
+    const linkedin = document.getElementById("linkedin")
+    const youtube = document.getElementById("youtube")
+    const eventbrite = document.getElementById("eventbrite")
+    const articles = [discord,linkedin,youtube,eventbrite]
+    if(document.body.clientWidth > 700){
+        articles.forEach(article => {
+            article.addEventListener("mouseover",()=>{
+                console.log(article)
+                document.body.classList.value = article.id;
+            })
+        })
+    }
+</script>
 </body>
 </html>
