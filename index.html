@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Meetup WebXR Francophone</title>
+    <meta name="og:title" property="og:title" content="Meetup WebXR Francophone">
+    <meta name="description" content="Rejoint la communauté WebXR francophone internationale au travers de Discord, YouTube, LinkedIn ou encore EventBrite.">
     <meta name="viewport" content="width = divice-width, initial-scale = 1.0">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
@@ -91,6 +93,7 @@
         }
         article p {
             max-height: 50%;
+            max-width: 500px;
             overflow-y: auto;
             margin:1em 0;
         }
@@ -129,7 +132,6 @@
 
         @media screen and (max-width: 700px){
             body, body.discord ,body.linkedin, body.youtube, body.eventbrite{
-                color:red;
                 grid-template-columns: 1fr;
                 grid-template-rows: 1fr 1fr 1fr 1fr;
                 grid-template-areas:
@@ -148,6 +150,10 @@
         }
 
     </style>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
 <script type="text/javascript">
@@ -197,7 +203,6 @@
     if(document.body.clientWidth > 700){
         articles.forEach(article => {
             article.addEventListener("mouseover",()=>{
-                console.log(article)
                 document.body.classList.value = article.id;
             })
         })
