@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arthur Mougin</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <script src="assets/js/libs/aframe.1.4.0.min.js"></script>
+    <script src='assets/js/libs/webxr-polyfill@latest.js'></script>
+
+    <script src="https://unpkg.com/aframe-state-component@7.1.0/dist/aframe-state-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    
+    <script src="assets/js/camera-rig.js"></script>
+    <script src="assets/js/state.js"></script>
+    <script src="assets/js/environment-tweaker.js"></script>
+    <script src="assets/js/layout-resizer.js"></script>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+
+<main>
+    <a-scene id="view" 
+        embedded
+        vr-mode-ui="enabled: false" 
+        loading-screen="backgroundColor: #1b1e21;dotsColor: grey"
+    >
+        <a-assets>
+            <a-mixin id="renderPlane" 
+                material="shader:html" 
+            ></a-mixin>
+            <a-mixin id="FocusCamera" 
+                look-at="#intro-target"
+            ></a-mixin>
+            <a-mixin id="FloatingCube" 
+                geometry="primitive: box" 
+                scale="0.5 0.5 0.5" 
+                material="
+                    color:#fff;
+                    transparent:true;
+                    opacity:0.8" 
+                mixin="absoluteRotate"
+
+            ></a-mixin>
+            <a-mixin id="absoluteRotate" 
+                animation__absoluterotate="
+                    property: rotation; 
+                    to: 0 360 -360; 
+                    loop: true; 
+                    dur: 50000; 
+                    easing:linear" 
+            ></a-mixin>
+            <a-mixin id="smallRotate" 
+                animation__smallrotate="
+                    property:rotation; 
+                    from: 180 -10 0; 
+                    to: 180 10 0; 
+                    loop: true; 
+                    dur: 5000; 
+                    dir:alternate; 
+                    easing:easeInOutSine" 
+            ></a-mixin>
+            <a-mixin id="interactable" 
+                animation__hoverstart="
+                    startEvents:mouseenter;
+                    autoplay:false;
+                    property: scale; 
+                    to: 1.2 1.2 1.2; 
+                    dur: 200; 
+                    easing: easeOutQuad"
+
+                animation__hoverend="
+                    startEvents:mouseleave;
+                    autoplay:false;
+                    property: scale; 
+                    to: 1 1 1; 
+                    dur: 200; 
+                    easing: easeOutQuad"
+
+                animation__click="
+                    startEvents:click;
+                    autoplay:false;
+                    property: scale; 
+                    to: 0.8 0.8 0.8; 
+                    dur: 200; 
+                    easing: easeOutQuad"
+
+                animation__clickend="
+                    startEvents:animationcomplete__click;
+                    autoplay:false;
+                    property: scale; 
+                    to: 1 1 1; 
+                    dur: 200; 
+                    easing: easeOutQuad"
+            ></a-mixin>
+            <a-mixin id="viewTarget" position="0 0 1.5" scale="0.1 0.1 0.1"></a-mixin>
+
+            <img id="assetSphereImg" src="/assets/images/vigie-dbdh.jpg">
+            <a-asset-item id="faceObj" src="/assets/model/face/mesh.obj"></a-asset-item>
+            <a-asset-item id="faceMtl" src="/assets/model/face/mesh.mtl"></a-asset-item>
+            <a-asset-item id="connectGLTF" src="/assets/model/connect/connect.gltf"></a-asset-item>
+        </a-assets>
+
+       <a-camera id="camera" 
+            position="0 1.3 0" 
+            rotation="90 0 0"
+            animation__enter="property: rotation; to: 0 0 0; loop: false; dur: 3000; easing:easeInOutSine"
+            cursor="rayOrigin: mouse"
+            look-controls-enabled="false"
+            wasd-controls-enabled="false"
+            raycaster="objects: .target"
+            camera-rig="speed:2"
+            bind__camera-rig="target:location"
+            ></a-camera>
+            
+        <a-entity id="intro-target" position="0 1.3 0" rotation="0 0 0">
+        </a-entity>
+
+        <a-entity id="layout" 
+            layout="
+                type:circle;
+                radius:4;
+                angle:45;
+                plane:xz" 
+            position="0 1 0" 
+            rotation="0 135 0" 
+            layout-resizer="
+                maxCamAngle:130;
+                minCamAngle:30;
+                maxItemAngle:35;
+                minItemAngle:15;
+                numberItems:3;
+            "
+        >
+            <a-entity id="a-projects" 
+                mixin="FocusCamera" 
+                onclick="toogleNavTo('#projects')"
+            >
+                <a-entity mixin="interactable">
+                    <a-sphere 
+                        class="target"
+                        scale="0.4 0.4 0.4" 
+                        material="
+                            src: #assetSphereImg; 
+                            npot: true; 
+                            side: back; 
+                            ambientOcclusionMapIntensity: 0; 
+                            color: #ffffff; 
+                            emissive: #c2c2c2; 
+                            emissiveIntensity: 0.34; 
+                            roughness: 0.2" 
+                        animation__bobbing="
+                            delay:1500;
+                            property:position.y;
+                            from:-0.05;
+                            to:0.05;
+                            loop:true;
+                            dir:alternate;
+                            dur:3500;
+                            easing:easeInOutSine"
+                        animation__smallrotate="
+                            property:rotation; 
+                            from: 0 -90 0; 
+                            to: 0 90 0; 
+                            loop: true; 
+                            dur: 30000;
+                            dir:alternate; 
+                            easing:easeInOutSine" 
+                    ></a-sphere>
+                </a-entity>
+                <a-entity class="cameratarget" id="projects-target" rotation="0 -40 0" mixin="viewTarget">
+                </a-entity>
+            </a-entity>
+            <a-entity id="a-about" 
+                mixin="FocusCamera" 
+                onclick="toogleNavTo('#about')"
+            >
+                <a-entity mixin="interactable">
+                    <a-entity position="0 -0.5 0">
+                        <a-entity 
+                            id="face"
+                            class="target"
+                            scale="0.01 0.01 0.01" 
+                            rotation="180 0 0" 
+                            event-set__model-loaded="
+                                material.emissive:#39d2f2;
+                                material.emissiveIntensity:0.1"
+                            obj-model="
+                                obj: #faceObj; 
+                                mtl: #faceMtl" 
+                            animation__bobbing="
+                                property:position.y;
+                                from:-0.05;
+                                to:0.05;
+                                loop:true;
+                                dir:alternate;
+                                dur:3000;
+                                easing:easeInOutSine"
+                            mixin="smallRotate"
+                        ></a-entity>
+                    </a-entity>
+                </a-entity>
+                <a-entity class="cameratarget" id="about-target" mixin="viewTarget">
+                </a-entity>
+            </a-entity>
+            <a-entity id="a-contact" 
+                mixin="FocusCamera interactable" 
+                onclick="toogleNavTo('#contact')"
+            >
+                <a-entity mixin="interactable">
+                    <a-gltf-model 
+                        src="#connectGLTF" 
+                        rotation="0 -90 0" 
+                        position="0 -0.5 0"
+                        scale="0.8 0.8 0.8"
+                        animation__bobbing="
+                            delay:2000;
+                            property:position.y;
+                            from:-0.45;
+                            to:-0.55;
+                            loop:true;
+                            dir:alternate;
+                            dur:3500;
+                            easing:easeInOutSine"
+                            
+                        animation__smallrotate="
+                            delay:2000;
+                            property:rotation; 
+                            from: 0 -100 0; 
+                            to: 0 -80 0; 
+                            loop: true; 
+                            dur: 15000;
+                            dir:alternate; 
+                            easing:easeInOutSine" 
+                            
+                        event-set__model-loaded="
+                            material.emissive:#39d2f2;
+                            material.emissiveIntensity:0.1"
+                    >
+                    <a-light decay="0.01" distance="0.6" type="point" position="0 0.5 0"></a-light>
+                    </a-gltf-model>
+                    <a-sphere 
+                        class="target" 
+                        material="
+                            side: back; 
+                            depthWrite: false;" 
+                            scale="0.6 0.6 0.6"
+                    ></a-sphere>
+                </a-entity>
+                <a-entity class="cameratarget" id="contact-target" rotation="0 40 0" mixin="viewTarget">
+                </a-entity>
+            </a-entity>
+        </a-entity>
+
+        <a-entity id="closeUpLight" light="type: point; color: #b3deff; decay: 0.78; intensity: 0.46"></a-entity>
+        <a-entity id="backgroundLight" light="color: #BBB" position="0 2 -4.6" look-at="0 0 0"></a-entity>
+        <a-entity id="environment"
+            environment="
+                preset:starry;
+                seed:2;
+                ground:hills;
+                groundYScale:20;
+                playArea:0.92;
+                groundColor:#454545;
+                groundColor2:#505050;"
+            environment-tweaker
+
+        ></a-entity>
+    </a-scene>
+    <section id="intro">
+        <header class="waiting">
+            <a href="#">
+                <h1>ARTHUR MOUGIN</h1>
+                <p>Freelance développeur, consultant et intervenant spécialisé en web 3D et Immersif.</p>
+            </a>
+        </header>
+        <a class="call2scroll" href="#about">V LA SUITE V</a>
+    </section>
+    <section id="about" class="flat">
+        <header>
+            <h2>En savoir plus</h2>
+            <ul>
+                <li><a href="#intro">ACCUEIL</a></li>
+                <li><a href="#about" class="disabled">A PROPOS</a></li>
+                <li><a href="#projects">PROJETS</a></li>
+                <li><a href="#contact">CONTACT</a></li>
+            </ul>
+        </header>
+        <article>
+
+        </article>
+    </section>
+    <section id="projects" class="flat">
+        <header>
+            <h2>Mes projets</h2>
+            <ul>
+                <li><a href="#intro">ACCUEIL</a></li>
+                <li><a href="#about">A PROPOS</a></li>
+                <li><a href="#projects" class="disabled">PROJETS</a></li>
+                <li><a href="#contact">CONTACT</a></li>
+            </ul>
+        </header>
+        <article>
+        </article>
+    </section>
+    <section id="contact" class="flat">
+        <header>
+            <h2>Contact</h2>
+            
+            <ul>
+                <li><a href="#intro">ACCUEIL</a></li>
+                <li><a href="#about">A PROPOS</a></li>
+                <li><a href="#projects">PROJETS</a></li>
+                <li><a href="#contact" class="disabled">CONTACT</a></li>
+            </ul>
+        </header>
+        <article> 
+            <h3>Contactez moi :</h3>
+            <ul>
+                <li><a href="https://www.linkedin.com/in/arthur-mougin/">Linkedin</a></li>
+                <li><a href="tel:+33626178797">Téléphone francais</a></li>
+                <li><a href="tel:+14388004056">Téléphone nord-américain</a></li>
+                <li><a href="mailto:bonjour@arthurmoug.in">Email professionnel</a></li>
+                <li><a href="https://discordapp.com/users/269572981792047106">Compte Discord</a></li>
+                <li><a href="https://arthurmoug.in">Salle virtuelle de rendez-vous en libre-accès</a></li>
+            </ul>
+        </article>
+    </section>
+</main>
+<footer>
+    <p></p>
+    <script src="assets/js/flat.js"></script>
+</footer>
+</body>
+</html>
